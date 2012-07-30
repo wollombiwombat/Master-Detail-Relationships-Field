@@ -189,10 +189,10 @@ class Field_master_detail_relationships
 		// If the linked stream was already deleted, we have a bit
 		// of a problem since we can't get the stream slug.
 		// Until we figure that out, here's this:
-		if ( ! $master_detail_stream OR ! isset($field->stream_prefix) OR ! isset($field->stream_slug)) return null;
+		if ( ! $master_detail_stream OR ! isset($stream->stream_prefix) OR ! isset($stream->stream_slug)) return null;
 				
 		// Get the table name
-		$table_name = $field->stream_prefix.$field->stream_slug.'_'.$master_detail_stream->stream_slug;
+		$table_name = $stream->stream_prefix.$stream->stream_slug.'_'.$master_detail_stream->stream_slug;
 		
 		// Remove the table		
 		$this->CI->dbforge->drop_table($table_name);
