@@ -16,7 +16,7 @@ class Field_master_detail_relationships
 
 	public $field_type_slug			= 'master_detail_relationships';
 	
-	public $db_col_type				= 'int';
+	public $db_col_type				= 'text';
 
 	public $alt_process				= true;
 
