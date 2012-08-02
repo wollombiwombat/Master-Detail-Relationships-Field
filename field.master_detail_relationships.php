@@ -457,6 +457,4 @@ class Field_master_detail_relationships
 			}
 		}
 	}
-
-	public function alt_plugin_call(){}
 }
