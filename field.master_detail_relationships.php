@@ -57,7 +57,7 @@ class Field_master_detail_relationships
 	{
 
 		// Anything here?
-		if ( ! isset($_POST['tree-item']) ) return false;
+		if ( ! isset($_POST['tree-item']) ) return '';
 
 		// Get slug streams
 		$master_detail_stream = $this->CI->streams_m->get_stream($field->field_data['master_detail_stream']);
@@ -83,7 +83,7 @@ class Field_master_detail_relationships
 			);
 		}
 
-		return true;
+		return '*'.implode('*', $_POST['tree-item']).'*';
 	}
 
 	// --------------------------------------------------------------------------
@@ -168,6 +168,11 @@ class Field_master_detail_relationships
 
 		// Make the entries unique. Last thing we need is two relationships to the same master_detail item
 		$this->CI->db->query('ALTER TABLE `'.$this->CI->db->dbprefix($table_name).'` ADD UNIQUE INDEX `Unique Relationships` (`'.$stream->stream_slug.'_id'.'`, `'.$master_detail_stream->stream_slug.'_id'.'`)');
+
+		// Add the column
+		$this->CI->dbforge->add_column($stream->stream_prefix.$stream->stream_slug, array($field->field_slug => array('type' => 'LONGTEXT')));
+
+		return true;
 	}
 
 	// --------------------------------------------------------------------------
@@ -182,6 +187,7 @@ class Field_master_detail_relationships
 	 */
 	public function field_assignment_destruct($field, $stream)
 	{
+
 		// Get the stream we are referring to.
 		$master_detail_stream = $this->CI->streams_m->get_stream($field->field_data['master_detail_stream']);
 		
@@ -196,6 +202,11 @@ class Field_master_detail_relationships
 		
 		// Remove the table		
 		$this->CI->dbforge->drop_table($table_name);
+
+		// Drop the column
+		$this->CI->dbforge->drop_column($stream->stream_prefix.$stream->stream_slug, $field->field_slug);
+
+		return true;
 	}
 
 	// --------------------------------------------------------------------------
@@ -447,4 +458,5 @@ class Field_master_detail_relationships
 		}
 	}
 
+	public function alt_plugin_call(){}
 }
