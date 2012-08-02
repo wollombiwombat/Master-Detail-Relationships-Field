@@ -83,7 +83,11 @@ class Field_master_detail_relationships
 			);
 		}
 
-		return '*'.implode('*', $_POST['tree-item']).'*';
+		// Build the cool value.
+		$input = '*'.implode('*', $_POST['tree-item']).'*';
+
+		// Save it manually cause alt fucks shit up
+		$this->CI->db->update($stream->stream_prefix.$stream->stream_slug, array($field->field_slug => $input), array('id' => $id));
 	}
 
 	// --------------------------------------------------------------------------
@@ -170,7 +174,7 @@ class Field_master_detail_relationships
 		$this->CI->db->query('ALTER TABLE `'.$this->CI->db->dbprefix($table_name).'` ADD UNIQUE INDEX `Unique Relationships` (`'.$stream->stream_slug.'_id'.'`, `'.$master_detail_stream->stream_slug.'_id'.'`)');
 
 		// Add the column
-		$this->CI->dbforge->add_column($stream->stream_prefix.$stream->stream_slug, array($field->field_slug => array('type' => 'LONGTEXT')));
+		$this->CI->dbforge->add_column($stream->stream_prefix.$stream->stream_slug, array($field->field_slug => array('type' => 'LONGTEXT', 'null' => TRUE)));
 
 		return true;
 	}
